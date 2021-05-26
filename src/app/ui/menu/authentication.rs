@@ -22,7 +22,7 @@ use crate::{
 
 lazy_static! {
     static ref USERNAME_REGEX: Regex = Regex::new(
-        "^@(?P<username>[a-z0-9_\\-\\.=/]{2,16}):(?P<homeserver>([a-z\\d-]+\\.\
+        "^@?(?P<username>[a-zA-Z0-9_\\-\\.=/]{2,16}):(?P<homeserver>([a-zA-Z\\d-]+\\.\
          ){1,}[a-z]+)$"
     )
     .unwrap();
@@ -47,8 +47,8 @@ impl Default for AuthenticateMenu {
 
         let password = LabeledInputWidget::new("Password")
             .set_secret(true)
-            .set_validation(ValidationType::Functional(|username| {
-                !username.is_empty()
+            .set_validation(ValidationType::Functional(|password| {
+                !password.is_empty()
             }))
             .to_owned();
 
@@ -187,7 +187,7 @@ impl AuthenticateMenu {
             },
             KeyCode::Enter => {
                 let error = if !self.username.input.is_valid() {
-                    Some("Username should match '@user:homeserver.domain'.")
+                    Some("Username should match '@user:domain'.")
                 } else if !self.password.input.is_valid() {
                     Some("No password specified.")
                 } else {
@@ -209,7 +209,7 @@ impl AuthenticateMenu {
 
                 let capture = USERNAME_REGEX
                     .captures(&self.username.input.value)
-                    .expect("Couldn't capture username regex.");
+                    .expect("Couldn't capture username regex."); // This should never happen as self.username would be invalid
                 let un_group = capture.name("username").unwrap();
                 let username = un_group.as_str().to_string();
 

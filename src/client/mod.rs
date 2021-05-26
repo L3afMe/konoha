@@ -109,7 +109,7 @@ impl Client {
 
         let client = MatrixClient::new(url).unwrap();
         let login = client.login(
-            &self.credentials.username,
+            &self.credentials.username.to_lowercase(),
             &self.credentials.password,
             None,
             Some(&CLIENT_ID),
