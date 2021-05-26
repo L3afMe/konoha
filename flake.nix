@@ -1,5 +1,5 @@
 {
-  description = "A highly configurable TUI Matrix client.";
+  description = "A user-friendly TUI client for Matrix written in Rust.";
 
   inputs = {
     nixpkgs.url      = "github:nixos/nixpkgs/nixos-unstable";
@@ -14,11 +14,14 @@
         pkgs = import nixpkgs {
           inherit system overlays;
         };
+        nightly = pkgs.rust-bin.nightly.latest.default.override {
+          extensions = [ "rust-src" ];
+        };
       in
       {
         devShell = pkgs.mkShell {
           buildInputs = with pkgs; [
-            rust-bin.nightly.latest.default
+            nightly
             cargo
             cargo-edit
             cargo-watch
@@ -29,7 +32,7 @@
             cmake
           ];
 
-          RUST_SRC_PATH = "${pkgs.rust.packages.stable.rustPlatform.rustLibSrc}";
+          RUST_SRC_PATH = "${nightly}/lib/rustlib/src/rust/library";
           RUST_BACKTRACE = 1;
         };
       }

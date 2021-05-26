@@ -1,6 +1,6 @@
 [package]
 name = "konoha"
-description = "A user-friendly terminal client for Matrix."
+description = "A user-friendly TUI client for Matrix."
 authors = [ "L3af <L3afMeAlon3@gmail.com>" ]
 version = "0.1.0"
 edition = "2018"
