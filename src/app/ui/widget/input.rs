@@ -138,7 +138,10 @@ impl Widget for InputWidget {
         if self.selected {
             match key.code {
                 KeyCode::Char(key) => {
-                    let split = self.value.split_at(self.cursor_pos);
+                    let split = (
+                         self.value.chars().take(self.cursor_pos).collect::<String>(),
+                         self.value.chars().skip(self.cursor_pos).collect::<String>(),
+                    );
                     self.value = format!("{}{}{}", split.0, key, split.1);
 
                     self.cursor_pos += 1;
