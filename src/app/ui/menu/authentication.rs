@@ -84,6 +84,7 @@ impl Menu for AuthenticateMenu {
                 KeyCode::Enter,
                 "Submit login".to_string(),
             ),
+            (KeyModifiers::NONE, KeyCode::Tab, "Next field".to_string()),
         ]
     }
 
@@ -162,7 +163,7 @@ impl AuthenticateMenu {
 
     fn handle_key(&mut self, key: KeyEvent, ctx: &Context) {
         match key.code {
-            KeyCode::Up => {
+            KeyCode::Up | KeyCode::BackTab => {
                 if self.focus_index == 0 {
                     self.focus_index = 2;
                 } else {
@@ -175,7 +176,7 @@ impl AuthenticateMenu {
 
                 return;
             },
-            KeyCode::Down => {
+            KeyCode::Down | KeyCode::Tab => {
                 self.focus_index += 1;
                 self.focus_index %= 3;
 
@@ -225,16 +226,6 @@ impl AuthenticateMenu {
                 // TODO: Logging
                 let _ =
                     ctx.send_notification(Notification::SetLogin(credentials));
-            },
-            KeyCode::Tab => {
-                let mut popup_builder =
-                    PopupMessageBuilder::new("Test popup lol");
-                let popup = popup_builder
-                    .set_title(Some("Test"))
-                    .set_title_align(Alignment::Right)
-                    .to_popup();
-                // TODO: Logging
-                let _ = ctx.send_notification(Notification::ShowPopup(popup));
             },
             _ => {},
         }
