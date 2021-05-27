@@ -13,10 +13,12 @@ lazy_static = "1.4.0"
 regex = "1.5.4"
 serde_json = "1.0.64"
 url = "2.2.2"
+tracing-subscriber = "0.2.18"
 
 [dependencies.matrix-sdk]
 git = "https://github.com/matrix-org/matrix-rust-sdk"
-rev = "eece920" 
+rev = "eece920"
+features = [ "encryption" ]
 
 [dependencies.serde]
 version = "1.0.126"

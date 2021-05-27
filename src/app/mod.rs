@@ -1,4 +1,4 @@
-use std::io::{self, stdout};
+use std::io::stdout;
 
 use crossterm::{
     event::{
@@ -28,11 +28,11 @@ use self::{
         Menu, Popup,
     },
 };
-use crate::app::{
+use crate::{app::{
     context::handle_notification,
     event::{handle_event, spawn_event_listener},
     helper::Spacing,
-};
+}, error::Result};
 
 pub mod context;
 pub mod event;
@@ -170,7 +170,7 @@ impl App {
     }
 }
 
-pub fn start_ui() -> Result<(), io::Error> {
+pub fn start_app() -> Result<()> {
     let (context, noti_rec) = Context::new();
 
     enable_raw_mode().expect("Unable to enable raw mode.");

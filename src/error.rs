@@ -8,6 +8,7 @@ pub type Result<T> = StdResult<T, Error>;
 #[derive(Debug)]
 pub enum Error {
     ConfigError(String),
+    LoginError(String),
     OtherError(String),
     IoError(IoError),
 }
@@ -15,7 +16,9 @@ pub enum Error {
 impl fmt::Display for Error {
     fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
         match self {
-            Self::OtherError(s) | Self::ConfigError(s) => f.write_str(s),
+            Self::LoginError(s)
+            | Self::OtherError(s)
+            | Self::ConfigError(s) => f.write_str(s),
             Self::IoError(e) => fmt::Display::fmt(e, f),
         }
     }
