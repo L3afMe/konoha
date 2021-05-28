@@ -2,7 +2,7 @@
 name: Panic report
 about: Create a report to help us improve Konoha
 title: "[BUG] "
-labels: ''
+labels: bug - panic
 assignees: L3afMe
 
 ---
