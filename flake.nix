@@ -33,7 +33,7 @@
           ];
 
           RUST_SRC_PATH = "${nightly}/lib/rustlib/src/rust/library";
-          RUST_BACKTRACE = 1;
+          # RUST_BACKTRACE = 1;
         };
       }
     );

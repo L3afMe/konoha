@@ -1,5 +1,10 @@
-use std::{fs::create_dir_all, path::PathBuf};
+use std::{
+    fs::{create_dir_all, File},
+    io::Write,
+    path::PathBuf,
+};
 
+use chrono::Local;
 use clap::crate_name;
 use lazy_static::lazy_static;
 
@@ -52,4 +57,31 @@ pub fn create_directories() -> Result<()> {
     }
 
     Ok(())
+}
+
+// More logs to come
+pub enum LogType {
+    Crash,
+}
+
+pub fn save_log(log_type: LogType, log: String) -> Result<String> {
+    let mut dir = DATA_DIRECTORY.as_ref().unwrap().clone();
+    dir.push("logs");
+
+    if !dir.exists() {
+        create_dir_all(&dir)?;
+    }
+    
+    let now = Local::now().format("%Y-%m-%d_%H-%M-%S%.3f");
+
+    match log_type {
+        LogType::Crash => {
+            dir.push(format!("crash-report_{}.log", now));
+
+            let mut file = File::create(&dir)?;
+            file.write_all(log.as_bytes())?;
+
+            Ok(dir.display().to_string())
+        },
+    }
 }
