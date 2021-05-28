@@ -1,5 +1,4 @@
 use std::{
-    any::Any,
     sync::mpsc::{self, Receiver},
     thread::{self, JoinHandle},
     time::{Duration, Instant},
@@ -30,13 +29,6 @@ pub struct EventReceiver {
     pub key_handle:  JoinHandle<()>,
     pub tick_handle: JoinHandle<()>,
     pub receiver:    Receiver<Event>,
-}
-
-impl EventReceiver {
-    pub fn join(self) -> Result<(), Box<dyn Any + Send>> {
-        let first = self.key_handle.join();
-        self.tick_handle.join().or(first)
-    }
 }
 
 pub fn spawn_event_listener(tick_ms: u64) -> EventReceiver {

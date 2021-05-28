@@ -6,7 +6,7 @@ use matrix_sdk::SyncSettings;
 
 use self::{
     auth::{get_home_server, login, AuthCreds},
-    context::{ClientSettings, Context},
+    context::Context,
 };
 use crate::{
     app::{
