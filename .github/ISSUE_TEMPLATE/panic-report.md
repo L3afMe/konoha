@@ -8,7 +8,7 @@ assignees: L3afMe
 ---
 
 **Description**
-A clear and concise description of what the bug is.
+<!-- A clear and concise description of what the bug is. -->
 
 **How To Reproduce**
 <!-- Steps to reproduce the panic, if unable to then state "Not reproducible".
