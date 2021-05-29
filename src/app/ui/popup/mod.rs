@@ -92,7 +92,10 @@ impl Popup {
                             ])
                             .split(max_size)[0];
 
-                        centered_rect(CenterPosition::AbsoluteInner(width, height), top)
+                        centered_rect(
+                            CenterPosition::AbsoluteInner(width, height),
+                            top,
+                        )
                     },
                     PopupPosition::TopRight => {
                         let top = Layout::default()
@@ -120,7 +123,10 @@ impl Popup {
                             ])
                             .split(max_size)[0];
 
-                        centered_rect(CenterPosition::AbsoluteInner(width, height), left)
+                        centered_rect(
+                            CenterPosition::AbsoluteInner(width, height),
+                            left,
+                        )
                     },
                     PopupPosition::Center => centered_rect(
                         CenterPosition::AbsoluteInner(width, height),
@@ -135,7 +141,10 @@ impl Popup {
                             ])
                             .split(max_size)[1];
 
-                        centered_rect(CenterPosition::AbsoluteInner(width, height), right)
+                        centered_rect(
+                            CenterPosition::AbsoluteInner(width, height),
+                            right,
+                        )
                     },
                     PopupPosition::BottomLeft => {
                         let bottom = Layout::default()
@@ -163,7 +172,10 @@ impl Popup {
                             ])
                             .split(max_size)[1];
 
-                        centered_rect(CenterPosition::AbsoluteInner(width, height), bottom)
+                        centered_rect(
+                            CenterPosition::AbsoluteInner(width, height),
+                            bottom,
+                        )
                     },
                     PopupPosition::BottomRight => {
                         let bottom = Layout::default()

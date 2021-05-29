@@ -3,7 +3,7 @@ use serde::Deserialize;
 use url::Url;
 
 use super::{context::ClientSettings, CLIENT_ID};
-use crate::{handle_login_section, fs::DATA_DIRECTORY};
+use crate::{fs::DATA_DIRECTORY, handle_login_section};
 
 #[derive(Debug, Clone)]
 pub struct AuthCreds {
@@ -88,4 +88,3 @@ struct HomeServerResponse {
     #[serde(rename = "m.identity_server")]
     identity_server: UrlWrapper,
 }
-

@@ -1,8 +1,7 @@
 use std::sync::mpsc::{Receiver, SendError, Sender};
 
-use crate::app::context::Notification;
-
 use super::ClientNotification;
+use crate::app::context::Notification;
 
 #[derive(Debug, Default, Clone)]
 pub struct ClientSettings {
@@ -17,8 +16,8 @@ pub struct Context {
 
 impl Context {
     pub fn new(
-        sender:       Sender<Notification>,
-        receiver:     Receiver<ClientNotification>,
+        sender: Sender<Notification>,
+        receiver: Receiver<ClientNotification>,
     ) -> Self {
         Self {
             sender,
@@ -34,4 +33,3 @@ impl Context {
         self.sender.send(notification)
     }
 }
-

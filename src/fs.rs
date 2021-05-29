@@ -71,7 +71,7 @@ pub fn save_log(log_type: LogType, log: String) -> Result<String> {
     if !dir.exists() {
         create_dir_all(&dir)?;
     }
-    
+
     let now = Local::now().format("%Y-%m-%d_%H-%M-%S%.3f");
 
     match log_type {

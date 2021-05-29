@@ -73,9 +73,7 @@ impl Context {
     pub fn start_client(&mut self, credentials: AuthCreds) -> JoinHandle<()> {
         let sender = self.notification_sender.clone();
         let (mut client, sender) = Client::new(credentials, sender);
-        let handle = tokio::task::spawn(async move {
-            client.login().await
-        });
+        let handle = tokio::task::spawn(async move { client.login().await });
 
         self.client_notification_sender = Some(sender);
         handle

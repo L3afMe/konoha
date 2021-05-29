@@ -14,7 +14,6 @@ use crossterm::{
 use tokio::task::JoinHandle;
 use tui::{
     backend::CrosstermBackend,
-    layout::{Constraint, Direction, Layout},
     widgets::{Block, BorderType, Borders, Clear, Paragraph},
     Terminal,
 };

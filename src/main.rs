@@ -23,4 +23,3 @@ async fn run() -> error::Result<()> {
 
     app::start_app()
 }
-

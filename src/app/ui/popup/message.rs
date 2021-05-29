@@ -6,7 +6,12 @@ use tui::{
 };
 
 use super::{Popup, PopupArea, PopupPosition};
-use crate::app::{context::Context, event::Event, helper::{shrink_area, CrosstermFrame, Spacing}, ui::prelude::Menu};
+use crate::app::{
+    context::Context,
+    event::Event,
+    helper::{shrink_area, CrosstermFrame, Spacing},
+    ui::prelude::Menu,
+};
 
 #[derive(Debug, Clone)]
 pub struct PopupMessageBuilder {

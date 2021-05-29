@@ -2,7 +2,12 @@ use std::io::Stdout;
 
 use clap::crate_name;
 use crossterm::event::{KeyCode, KeyModifiers};
-use tui::{Frame, backend::CrosstermBackend, layout::{Alignment, Constraint, Direction, Layout, Rect}, widgets::{Block, Borders, Paragraph}};
+use tui::{
+    backend::CrosstermBackend,
+    layout::{Alignment, Constraint, Direction, Layout, Rect},
+    widgets::{Block, Borders, Paragraph},
+    Frame,
+};
 
 pub type CrosstermFrame<'a> = Frame<'a, CrosstermBackend<Stdout>>;
 
@@ -147,7 +152,8 @@ pub fn shrink_area(mut area: Rect, spacing: Spacing) -> Rect {
 }
 
 // TODO: Tidy this
-// Returns the rect in which the rest of the app can be drawn
+// Returns the rect in which the rest of the app can be
+// drawn
 pub fn draw_help_menu(
     frame: &mut CrosstermFrame,
     mut menu_help: Vec<(KeyModifiers, KeyCode, String)>,
@@ -223,7 +229,8 @@ pub fn draw_help_menu(
 
     for (idx, line) in split.iter().enumerate() {
         let layout = centered_line(longest, 1, idx as u16 + 1, bottom);
-        let paragraph = Paragraph::new(line.as_ref()).alignment(Alignment::Center);
+        let paragraph =
+            Paragraph::new(line.as_ref()).alignment(Alignment::Center);
         frame.render_widget(paragraph, layout);
     }
 

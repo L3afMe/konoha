@@ -76,7 +76,12 @@ pub fn handle_panic(info: &PanicInfo) {
 
     let _ = write!(
         buffer,
-        "Version: {}\nSystem: {}\nCause: {}\n\nTrace: \n{}",
+        "Version: {}\n\
+         System: {}\n\
+         Cause: {}\n\
+         \n\
+         Trace: \n\
+         {}",
         version, os_info, panic_message, trace
     );
 
@@ -85,21 +90,33 @@ pub fn handle_panic(info: &PanicInfo) {
         Err(why) => format!("Error creating log file: {}", why),
     };
 
+    let submit_url = format!(
+        "{}/issues/new\
+            ?assignees=L3afMe\
+            &template=panic-report.md\
+            &title=[BUG]%20{}",
+        repo,
+        urlencoding::encode(&panic_message),
+    );
+
     println!(
-        "Oh, no! It seems like {} has crashed, this is kind of \
-         embarrassing.\n\n{}\n\nDue to the nature of {}, we respect your \
-         privacy and as such\ncrash reports are never sent automatically. If \
-         you would like\nto help up diagnose this issue, please submit an \
-         issue at \n{}/issues/new?assignees=L3afMe&labels=&\
-         template=panic-report.md&title=[BUG]{}\n\nThe report contains some \
-         basic information about your system\nlike the OS and arch type, this \
-         can help with diagnosing what\nwent wrong, if you don't want this to \
-         be sent feel free to\nremove it before submitting.\n",
+        "Oh, no! It seems like {} has crashed, this is kind of embarrassing.\n\
+         \n\
+         {}\n\
+         \n
+         Due to the nature of {}, we respect your privacy and as such\n\
+         crash reports are never sent automatically. If you would like\n\
+         to help up diagnose this issue, please submit an issue at \n\
+         {}\n\
+         \n\
+         The report contains some basic information about your system\n\
+         like the OS and arch type, this can help with diagnosing what\n\
+         went wrong, if you don't want this to be sent feel free to\n\
+         remove it before submitting.\n",
         name,
         path,
         name,
-        repo,
-        urlencoding::encode(&panic_message),
+        submit_url,
     );
 }
 

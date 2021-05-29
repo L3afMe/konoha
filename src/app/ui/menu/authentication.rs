@@ -7,15 +7,23 @@ use tui::{
 };
 
 use super::Menu;
-use crate::{app::{context::{Context, Notification}, event::Event, helper::{self, CenterPosition, CrosstermFrame, split_rect}, ui::prelude::{
+use crate::{
+    app::{
+        context::{Context, Notification},
+        event::Event,
+        helper::{self, split_rect, CenterPosition, CrosstermFrame},
+        ui::prelude::{
             message::PopupMessageBuilder, ButtonWidget, LabeledInputWidget,
             ValidationType, Widget,
-        }}, client::auth::AuthCreds};
+        },
+    },
+    client::auth::AuthCreds,
+};
 
 lazy_static! {
     static ref USERNAME_REGEX: Regex = Regex::new(
-        "^@?(?P<username>[a-zA-Z0-9_\\-\\.=/]{2,16}):(?P<homeserver>([a-zA-Z\\d-]+\\.\
-         ){1,}[a-z]+)$"
+        "^@?(?P<un>[a-zA-Z0-9_\\-\\.=/]{2,16}):\
+            (?P<hs>([a-zA-Z\\d-]+\\.){1,}[a-z]+)$"
     )
     .unwrap();
 }
@@ -221,4 +229,3 @@ impl AuthenticateMenu {
         self.password.on_key(ctx, key);
     }
 }
-

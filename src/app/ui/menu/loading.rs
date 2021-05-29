@@ -78,7 +78,7 @@ impl Menu for LoadingMenu {
     }
 
     fn get_minimum_size(&mut self) -> (u16, u16) {
-        let split = self.text.split("\n").collect::<Vec<&str>>();
+        let split = self.text.split('\n').collect::<Vec<&str>>();
         let longest = split
             .iter()
             .map(|line| line.len())
