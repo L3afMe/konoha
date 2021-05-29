@@ -15,24 +15,27 @@ use tokio::task::JoinHandle;
 use tui::{
     backend::CrosstermBackend,
     layout::{Constraint, Direction, Layout},
-    widgets::{Block, BorderType, Borders, Clear},
+    widgets::{Block, BorderType, Borders, Clear, Paragraph},
     Terminal,
 };
 
 use self::{
     context::{Context, Notification},
     event::Event,
-    helper::{draw_help_menu, expand_area, CrosstermFrame},
+    helper::{draw_help_menu, expand_area, split_text, CrosstermFrame},
     ui::prelude::{
         message::PopupMessageBuilder, new_confirm_popup, AuthenticateMenu,
         Menu, Popup,
     },
 };
-use crate::{app::{
-    context::handle_notification,
-    event::{handle_event, spawn_event_listener},
-    helper::Spacing,
-}, error::Result};
+use crate::{
+    app::{
+        context::handle_notification,
+        event::{handle_event, spawn_event_listener},
+        helper::Spacing,
+    },
+    error::Result,
+};
 
 pub mod context;
 pub mod event;
@@ -58,25 +61,32 @@ impl App {
 
     pub fn draw(&mut self, frame: &mut CrosstermFrame) {
         let area = if !self.context.settings.hide_help {
-            let split = Layout::default()
-                .direction(Direction::Vertical)
-                .constraints([Constraint::Min(1), Constraint::Length(3)])
-                .split(frame.size());
-
             let help_message = if let Some(popup) = &mut self.popup {
                 popup.get_help_message(&self.context)
             } else {
                 self.menu.get_help_message(&self.context)
             };
 
-            draw_help_menu(frame, help_message, split[1]);
-
-            split[0]
+            draw_help_menu(frame, help_message, frame.size())
         } else {
             frame.size()
         };
 
-        self.menu.draw(frame, area, &self.context);
+        let (min_width, min_height) = self.menu.get_minimum_size();
+        if min_width > area.width || min_height > area.height {
+            let text = split_text(
+                "Please resize your screen so there is more space to draw!",
+                " ",
+                area.width as usize - 2,
+            )
+            .join("\n");
+
+            let block = Block::default().title("Error").borders(Borders::ALL);
+            let error = Paragraph::new(text).block(block);
+            frame.render_widget(error, area);
+        } else {
+            self.menu.draw(frame, area, &self.context);
+        }
 
         if let Some(popup) = &mut self.popup {
             let popup_area = popup.get_area(area);

@@ -166,6 +166,11 @@ impl Menu for ConfirmMenu {
         self.confirm_button.render(button_split[0], frame);
         self.cancel_button.render(button_split[1], frame);
     }
+
+    fn get_minimum_size(&mut self) -> (u16, u16) {
+        // TODO: Placeholder
+        (0, 0)
+    }
 }
 
 fn format_padding(message: &str, padding: Spacing) -> (u16, u16) {

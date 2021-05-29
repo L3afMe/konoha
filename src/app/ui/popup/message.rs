@@ -187,6 +187,11 @@ impl Menu for MessageMenu {
     ) -> Vec<(KeyModifiers, KeyCode, String)> {
         vec![(KeyModifiers::NONE, KeyCode::Esc, "Close popup".to_string())]
     }
+
+    fn get_minimum_size(&mut self) -> (u16, u16) {
+        // TODO: Padding
+        (0, 0)
+    }
 }
 
 fn format_padding(message: &str, padding: Spacing) -> (u16, u16) {

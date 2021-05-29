@@ -3,22 +3,14 @@ use lazy_static::lazy_static;
 use regex::Regex;
 use tui::{
     layout::{Alignment, Constraint, Direction, Layout, Rect},
-    widgets::{Block, Borders, Paragraph},
+    widgets::{Block, Borders},
 };
 
 use super::Menu;
-use crate::{
-    app::{
-        context::{Context, Notification},
-        event::Event,
-        helper::{self, split_rect, CenterPosition, CrosstermFrame},
-        ui::prelude::{
+use crate::{app::{context::{Context, Notification}, event::Event, helper::{self, CenterPosition, CrosstermFrame, split_rect}, ui::prelude::{
             message::PopupMessageBuilder, ButtonWidget, LabeledInputWidget,
             ValidationType, Widget,
-        },
-    },
-    client::auth::AuthCreds,
-};
+        }}, client::auth::AuthCreds};
 
 lazy_static! {
     static ref USERNAME_REGEX: Regex = Regex::new(
@@ -129,17 +121,11 @@ impl Menu for AuthenticateMenu {
                 .borders(Borders::ALL);
             frame.render_widget(frame_block, size);
         } else {
-            let frame_block = Paragraph::new(
-                split_text(
-                    "Please resize your screen so there is more space to draw!"
-                        .to_string(),
-                    (max_size.width as usize).max(3) - 2,
-                )
-                .join("\n"),
-            )
-            .block(Block::default().title("Error").borders(Borders::ALL));
-            frame.render_widget(frame_block, frame.size());
         }
+    }
+
+    fn get_minimum_size(&mut self) -> (u16, u16) {
+        (42, 6)
     }
 }
 
@@ -210,7 +196,8 @@ impl AuthenticateMenu {
 
                 let capture = USERNAME_REGEX
                     .captures(&self.username.input.value)
-                    .expect("Couldn't capture username regex."); // This should never happen as self.username would be invalid
+                    .expect("Couldn't capture username regex.");
+
                 let un_group = capture.name("username").unwrap();
                 let username = un_group.as_str().to_string();
 
@@ -235,30 +222,3 @@ impl AuthenticateMenu {
     }
 }
 
-fn split_text(text: String, size: usize) -> Vec<String> {
-    let mut output = Vec::new();
-    let mut input_remaining = text;
-
-    loop {
-        if input_remaining.len() < size {
-            output.push(input_remaining);
-            break;
-        } else {
-            let (split, remaining) =
-                input_remaining.split_at(input_remaining.len().min(size));
-            if split.contains(' ') {
-                let (split, split_remaining) = split.rsplit_once(' ').unwrap();
-                output.push(split.to_string().trim_matches(' ').to_string());
-                input_remaining = (split_remaining.to_string() + remaining)
-                    .trim_matches(' ')
-                    .to_string();
-            } else if remaining.starts_with(' ') || split.ends_with(' ') {
-                output.push(split.to_string().trim_matches(' ').to_string());
-                input_remaining =
-                    remaining.to_string().trim_matches(' ').to_string();
-            }
-        }
-    }
-
-    output
-}

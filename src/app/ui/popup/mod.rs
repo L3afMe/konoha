@@ -208,4 +208,8 @@ impl Menu for Popup {
     ) -> Vec<(KeyModifiers, KeyCode, String)> {
         self.menu.get_help_message(ctx)
     }
+
+    fn get_minimum_size(&mut self) -> (u16, u16) {
+        self.menu.get_minimum_size()
+    }
 }

@@ -2,12 +2,7 @@ use std::io::Stdout;
 
 use clap::crate_name;
 use crossterm::event::{KeyCode, KeyModifiers};
-use tui::{
-    backend::CrosstermBackend,
-    layout::{Constraint, Direction, Layout, Rect},
-    widgets::{Block, Borders, Paragraph},
-    Frame,
-};
+use tui::{Frame, backend::CrosstermBackend, layout::{Alignment, Constraint, Direction, Layout, Rect}, widgets::{Block, Borders, Paragraph}};
 
 pub type CrosstermFrame<'a> = Frame<'a, CrosstermBackend<Stdout>>;
 
@@ -151,11 +146,13 @@ pub fn shrink_area(mut area: Rect, spacing: Spacing) -> Rect {
     area
 }
 
+// TODO: Tidy this
+// Returns the rect in which the rest of the app can be drawn
 pub fn draw_help_menu(
     frame: &mut CrosstermFrame,
     mut menu_help: Vec<(KeyModifiers, KeyCode, String)>,
-    bottom_layout: Rect,
-) {
+    max_size: Rect,
+) -> Rect {
     menu_help.insert(
         0,
         (
@@ -188,17 +185,49 @@ pub fn draw_help_menu(
 
         mod_str
     });
-    let text = mapped.collect::<Vec<String>>().join(", ");
+    let seperator = ", ";
+    let mut text = mapped.collect::<Vec<String>>().join(seperator);
+    let mut split = split_text(&text, seperator, max_size.width as usize - 6);
 
-    let layout = centered_line((text.len() + 4) as u16, 3, 0, bottom_layout);
-    // Border adding size messing with shit
+    let mut lines = split.len() as u16;
+    let mut longest = split
+        .iter()
+        .map(|line| line.len())
+        .reduce(|l1, l2| l1.max(l2))
+        .unwrap_or_else(|| text.len()) as u16;
+
+    if longest + 4 > max_size.width {
+        text = "Size too small to draw".to_string();
+        split = split_text(&text, " ", max_size.width as usize - 4);
+
+        lines = split.len() as u16;
+        longest = split
+            .iter()
+            .map(|line| line.len())
+            .reduce(|l1, l2| l1.max(l2))
+            .unwrap_or_else(|| text.len()) as u16;
+    }
+
+    let layouts = Layout::default()
+        .direction(Direction::Vertical)
+        .constraints([Constraint::Min(0), Constraint::Length(lines + 2)])
+        .split(max_size);
+    let top = layouts[0];
+    let bottom = layouts[1];
+
+    // Append 4 extra; 2 for padding and 2 for the border
+    let layout = centered_line(longest + 4, lines + 2, 0, bottom);
 
     let help_block = Block::default().title("Help").borders(Borders::ALL);
     frame.render_widget(help_block, layout);
 
-    let layout = centered_line(text.len() as u16, 1, 1, bottom_layout);
-    let paragraph = Paragraph::new(text.as_ref());
-    frame.render_widget(paragraph, layout)
+    for (idx, line) in split.iter().enumerate() {
+        let layout = centered_line(longest, 1, idx as u16 + 1, bottom);
+        let paragraph = Paragraph::new(line.as_ref()).alignment(Alignment::Center);
+        frame.render_widget(paragraph, layout);
+    }
+
+    top
 }
 
 fn keycode_to_str(key: KeyCode) -> String {
@@ -222,4 +251,29 @@ fn keycode_to_str(key: KeyCode) -> String {
         KeyCode::Backspace => "Backspace".to_string(),
         KeyCode::Null => String::default(),
     }
+}
+
+pub fn split_text(text: &str, sep: &str, max_size: usize) -> Vec<String> {
+    let mut output = Vec::new();
+    let mut input_remaining = text.to_string();
+
+    while input_remaining.len() > max_size {
+        let (split, remaining) =
+            input_remaining.split_at(input_remaining.len().min(max_size));
+
+        if split.contains(sep) {
+            let (split, split_remaining) = split.rsplit_once(sep).unwrap();
+            output.push(split.trim_matches(' ').to_string());
+            input_remaining = (split_remaining.to_string() + remaining)
+                .trim_matches(' ')
+                .to_string();
+        } else if remaining.starts_with(' ') || split.ends_with(' ') {
+            output.push(split.trim_matches(' ').to_string());
+            input_remaining = remaining.trim_matches(' ').to_string();
+        }
+    }
+
+    output.push(input_remaining);
+
+    output
 }

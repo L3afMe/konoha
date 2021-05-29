@@ -18,10 +18,13 @@ pub trait Menu {
         max_size: Rect,
         ctx: &Context,
     );
+
     fn get_help_message(
         &mut self,
         ctx: &Context,
     ) -> Vec<(KeyModifiers, KeyCode, String)>;
+
+    fn get_minimum_size(&mut self) -> (u16, u16);
 }
 
 impl Menu for Box<dyn Menu> {
@@ -43,5 +46,9 @@ impl Menu for Box<dyn Menu> {
         ctx: &Context,
     ) -> Vec<(KeyModifiers, KeyCode, String)> {
         self.deref_mut().get_help_message(ctx)
+    }
+
+    fn get_minimum_size(&mut self) -> (u16, u16) {
+        self.deref_mut().get_minimum_size()
     }
 }
