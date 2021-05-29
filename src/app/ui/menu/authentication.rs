@@ -206,10 +206,10 @@ impl AuthenticateMenu {
                     .captures(&self.username.input.value)
                     .expect("Couldn't capture username regex.");
 
-                let un_group = capture.name("username").unwrap();
+                let un_group = capture.name("un").unwrap();
                 let username = un_group.as_str().to_string();
 
-                let hs_group = capture.name("homeserver").unwrap();
+                let hs_group = capture.name("hs").unwrap();
                 let homeserver = hs_group.as_str().to_string();
 
                 let credentials = AuthCreds {
