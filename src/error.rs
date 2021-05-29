@@ -103,7 +103,7 @@ pub fn handle_panic(info: &PanicInfo) {
         "Oh, no! It seems like {} has crashed, this is kind of embarrassing.\n\
          \n\
          {}\n\
-         \n
+         \n\
          Due to the nature of {}, we respect your privacy and as such\n\
          crash reports are never sent automatically. If you would like\n\
          to help up diagnose this issue, please submit an issue at \n\
