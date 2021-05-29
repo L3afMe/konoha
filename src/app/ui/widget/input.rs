@@ -33,7 +33,7 @@ pub struct InputWidget {
     pub validation: ValidationType,
     pub selected:   bool,
     pub cursor_pos: usize,
-    pub scroll_pos: usize,
+    scroll_pos:     usize,
     tick_count:     u8,
 }
 
@@ -71,11 +71,6 @@ impl InputWidget {
         self
     }
 
-    pub fn set_scroll_pos(&mut self, pos: usize) -> &mut Self {
-        self.scroll_pos = pos;
-        self
-    }
-
     pub fn is_valid(&mut self) -> bool {
         match self.validation {
             ValidationType::Manual(value) => value,
@@ -94,10 +89,20 @@ impl Widget for InputWidget {
             self.value.clone()
         };
 
+        self.scroll_pos = if value_text.len() < max_len {
+            0
+        } else if self.cursor_pos < self.scroll_pos {
+            self.cursor_pos
+        } else if max_len + self.scroll_pos <= self.cursor_pos {
+            self.cursor_pos - max_len + 1
+        } else {
+            self.scroll_pos
+        };
+
         if self.scroll_pos > 0 {
-            value_text = value_text
-                [self.scroll_pos..max_len.min(value_text.len())]
-                .to_string();
+            let start_pos = self.scroll_pos;
+            let end_pos = (start_pos + max_len).min(value_text.len());
+            value_text = value_text[start_pos..end_pos].to_string();
         }
 
         let placeholder_text = "_".repeat(
@@ -110,14 +115,12 @@ impl Widget for InputWidget {
         if self.selected && self.tick_count < CURSOR_BLINK_TICKS {
             // TODO: Better way to do this
             let mut chars: Vec<char> = text.chars().collect();
-            let cursor_pos = self.cursor_pos as i32 - self.scroll_pos as i32;
+            let cursor_pos = self.cursor_pos - self.scroll_pos;
 
             // Ensure that no panic
-            if cursor_pos >= 0
-                && chars.get(cursor_pos as usize).cloned().is_some()
-            {
-                chars.remove(cursor_pos as usize);
-                chars.insert(cursor_pos as usize, '█');
+            if chars.get(cursor_pos as usize).is_some() {
+                chars.remove(cursor_pos);
+                chars.insert(cursor_pos, '█');
 
                 text = String::default();
                 for c in chars {
