@@ -103,7 +103,7 @@ impl App {
     }
 
     pub fn on_key_press(&mut self, key: KeyEvent) {
-        if key.code == KeyCode::Char('?') && key.modifiers == KeyModifiers::ALT
+        if key.code == KeyCode::Char('h') && key.modifiers == KeyModifiers::CONTROL
         {
             self.context.settings.toggle_help();
             return;
