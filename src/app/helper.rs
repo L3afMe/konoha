@@ -162,8 +162,8 @@ pub fn draw_help_menu(
     menu_help.insert(
         0,
         (
-            KeyModifiers::ALT,
-            KeyCode::Char('?'),
+            KeyModifiers::CONTROL,
+            KeyCode::Char('h'),
             "Toggle help menu".to_string(),
         ),
     );
