@@ -10,7 +10,7 @@ the repository license, which is the GNU GPL v3.0 license.
     ```error-be-gone
     (Section): (Brief summary) (Optional: Issue number if related)
 
-    (optional: Longer summary on what was changed or any additional information)
+    (Optional: Longer summary on what was changed or any additional information)
     ```
 
 * Sections
@@ -31,5 +31,5 @@ the repository license, which is the GNU GPL v3.0 license.
   * `feat: Add popup config`
   * `feat: add popup config.`
   * `feat: fix crash caused by menu size #1`
-  * `bug: add popup config.`
+  * `bug: add popup config`
 
